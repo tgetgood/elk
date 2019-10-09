@@ -1,0 +1,5 @@
+^{:open-url false
+  :css-dirs ["resources/public/css"]}
+{:main       elk.core
+ :output-to  "resources/public/js/app.js"
+ :output-dir "resources/public/js"}
