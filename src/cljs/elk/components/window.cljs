@@ -16,8 +16,7 @@
        (set! url))))
 
 (defn main [content]
-  [:div.padded
-   [:div.vspacer]
+  [:div {:style {:padding "1rem"}}
    [content]])
 
 (defn hi []

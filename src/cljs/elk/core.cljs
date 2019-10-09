@@ -1,5 +1,8 @@
 (ns ^:figwheel-hooks elk.core
-  (:require [elk.components.window :as window]
+  (:require [cljsjs.codemirror]
+            [cljsjs.codemirror.mode.clojure]
+            [elk.components.code :as code]
+            [elk.components.window :as window]
             [elk.config :as config]
             [elk.events :as events]
             [re-frame.core :as re-frame]
@@ -14,7 +17,7 @@
 
 (defn ^:after-load mount-root []
   (re-frame/clear-subscription-cache!)
-  (reagent/render [window/main window/hi]
+  (reagent/render [window/main code/unit]
                   (.getElementById js/document "app")))
 
 
