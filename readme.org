@@ -1,0 +1,59 @@
+#+TITLE: Elk Editor
+
+Ubik has too many interwoven ideas to change quickly. That was a mistake. This
+is an attempt to fix that mistake.
+
+* Motivation
+	I'm interested in communication languages. Communication langauges are unlike
+	standard programming languages in that they're uninterested in computation as
+	such, but are instead concerned with how a network of computing processes
+	interact with each other.
+
+	The underlying computation language for this project is
+	clojure(script). Specifically a *very* pure subset of clojure. Computations
+	are pure functions. No side effects whatsoever are allowed in the computation
+	code. All side effects — this includes disk I/O, network I/O, changing /
+	reading refs (which is just memory I/O), generating random numbers, state,
+	etc., etc., ad nauseum — are handled as communication at a different level
+	from computation.
+
+* Model
+	N.B.: this is just soundboarding and shouldn't be taken as too seriously.
+
+	Computation is a mathematical abstraction. Computations don't take time or do
+	anything, they just are. (gcd 30 12) = 6 no matter how you determine it and no
+	matter how long that algorithm takes. Algorithms are important, but at the
+	level of communication, they're irrelevant, only values matter.
+
+	That said, algorithms can have a strong effect on timing, and so play a role
+	in the dynamics of a system, but more on that later.
+
+	A computational unit receives messages from multiple channels and dispatches
+	to different (pure) functions depending on the channel the message arrives
+	on.
+
+	These message processing fns receive a message and the current state of the
+	unit, and return a new state along with zero or more messages.
+
+	Units have no control over, or indeed knowledge of the topology of the
+	system. They don't know who is sending them messages, they only know the value
+	of the message and the channel on which it arrives. Similarly, they have no
+	knowledge of who will receive the messages they emit.
+
+	At first glance this seems to make it impossible to do anything
+	interesting. But that's because we habitually confound computation and
+	coordination.
+
+	The goal of this system is to provide an interface and a language for
+	connecting such dumb but simple and mathematically tractable units into
+	complex systems which do anything one would expect a program to be able to
+	do.
+
+	What's the point of this exercise? My hypothesis is that such a system will be
+	easier to understand, test, and modify than traditional systems. We'll see.
+
+* License
+	Copyright © 2019 Thomas Getgood
+
+	Distributed under the Eclipse Public License either version 1.0 or (at your
+	option) any later version.
