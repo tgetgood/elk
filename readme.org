@@ -4,7 +4,7 @@ Ubik has too many interwoven ideas to change quickly. That was a mistake. This
 is an attempt to fix that mistake.
 
 * Motivation
-	I'm interested in communication languages. Communication langauges are unlike
+	I'm interested in communication languages. Communication languages are unlike
 	standard programming languages in that they're uninterested in computation as
 	such, but are instead concerned with how a network of computing processes
 	interact with each other.
@@ -35,7 +35,7 @@ is an attempt to fix that mistake.
 	These message processing fns receive a message and the current state of the
 	unit, and return a new state along with zero or more messages.
 
-	Units have no control over, or indeed knowledge of the topology of the
+	Units have no control over, or indeed knowledge, of the topology of the
 	system. They don't know who is sending them messages, they only know the value
 	of the message and the channel on which it arrives. Similarly, they have no
 	knowledge of who will receive the messages they emit.
