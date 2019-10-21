@@ -1,7 +1,5 @@
 (ns ^:figwheel-hooks elk.core
-  (:require [cljsjs.codemirror]
-            [cljsjs.codemirror.mode.clojure]
-            [elk.components.code :as code]
+  (:require [elk.components.code :as code]
             [elk.components.window :as window]
             [elk.config :as config]
             [elk.events :as events]
@@ -14,12 +12,10 @@
     (enable-console-print!)
     (log/info "dev mode")))
 
-
 (defn ^:after-load mount-root []
   (re-frame/clear-subscription-cache!)
-  (reagent/render [window/main code/unit]
+  (reagent/render [window/main [code/unit {:id :a}]]
                   (.getElementById js/document "app")))
-
 
 (defn ^:export init []
   (re-frame/dispatch-sync [::events/initialise-db])
