@@ -7,29 +7,10 @@
            [reagent.core :as reagent]
            [re-frame.core :as re-frame]))
 
-(defn fake-load-fn
-  "No op loader"
-  [_ cb]
-  (cb {:lang   :js
-       :source ""}))
-
-(def compiler-opts
-  {:eval cljs/js-eval
-   :load fake-load-fn})
-
-(def out (atom nil))
-
-(defn ev [form]
-  (binding [cljs.js/*eval-fn* cljs.js/js-eval
-            *ns* (create-ns (gensym))
-            cljs.env/*compiler* (cljs.js/empty-state)]
-    (eval form)))
-
-
 (re-frame/reg-event-db
  ::edit
  (fn [db [_ id text]]
-   (assoc-in db [::codeblocks id] text)))
+   (assoc-in db [::codeblocks id :text] text)))
 
 (defn resolve-binding [x] x)
 
