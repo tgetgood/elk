@@ -1,6 +1,5 @@
 (ns elk.server
-  (:require clj-http.client
-            [clojure.java.io :as io]
+  (:require [clojure.java.io :as io]
             [compojure.core :as c]
             [compojure.route :as route]
             [elk.env :as env]
@@ -16,12 +15,7 @@
 
 (defonce socket
   (sente/make-channel-socket-server!
-   (sente-http-kit/get-sch-adapter)
-   {:user-id-fn (fn [req]
-                  (-> req
-                      :oauth2/access-tokens
-                      :orcid
-                      :orcid-id))}))
+   (sente-http-kit/get-sch-adapter)))
 
 ;;;;; Routes
 

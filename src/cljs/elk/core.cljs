@@ -14,6 +14,8 @@
 
 (defn ^:after-load mount-root []
   (re-frame/clear-subscription-cache!)
+  (re-frame/dispatch [:send [:elk/demo-doc]])
+
   (reagent/render [window/main [code/unit {:id :a}]]
                   (.getElementById js/document "app")))
 

@@ -44,8 +44,9 @@
 ;;;;; Connection management
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; This is the external API call
 (re-frame/reg-event-fx
- ::try-send
+ :send
  (fn [{{:keys [chsk]} :db} [_ ev]]
    (if (and (satisfies? IDeref (:state chsk))
             (:open? @(:state chsk)))
@@ -71,7 +72,7 @@
              :dispatch-n
              (into [[::login-check]]
                    (when (seq pending)
-                     (map (fn [ev] [::try-send ev]) pending)))}))))
+                     (map (fn [ev] [:send ev]) pending)))}))))
 
 (let [connecting? (atom false)]
   (re-frame/reg-fx
@@ -125,3 +126,9 @@
    (log/error "Received broadcast message from server"
               e
               "Broadcast support is not currently implemented.")))
+
+;; HACK:
+(re-frame/reg-event-db
+ :elk/demo-doc
+ (fn [db [_ doc]]
+   (assoc db ::demo doc)))

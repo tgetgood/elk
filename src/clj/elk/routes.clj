@@ -21,7 +21,7 @@
     ;; But if it's the only way to return the result to you...
     (not= :taoensso.sente/nil-uid uid) (send-fn uid msg)
 
-    :else (log/warn "No way to return response to sender." uid msg))  )
+    :else (log/warn "No way to return response to sender." uid msg)))
 
 (defmulti dispatch (fn [{:keys [id] :as e}]
                      ;; Ignore all internal sente messages at present
@@ -35,3 +35,11 @@
 (defmethod dispatch :default
   [e]
   (log/warn "Unhandled client event:" e))
+
+(def demo-doc
+  {:sections []
+   :layout {}})
+
+(defmethod dispatch :elk/demo-doc
+  [e]
+  (respond-with-fallback e [:elk/demo-doc {}]))

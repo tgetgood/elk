@@ -32,4 +32,4 @@
     (cond
       (number? p) p
       (string? p) (Integer/parseInt p)
-      :else       (throw (Exception. "Invalid port specified.")))))
+      :else       8080)))
