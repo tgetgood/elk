@@ -1,9 +1,30 @@
 (ns elk.components.code
  (:require [cljsjs.codemirror]
            [cljsjs.codemirror.mode.clojure]
+           [cljs.js :as cljs]
+           [cljs.reader :as r]
            [hasch.core :as h]
            [reagent.core :as reagent]
            [re-frame.core :as re-frame]))
+
+(defn fake-load-fn
+  "No op loader"
+  [_ cb]
+  (cb {:lang   :js
+       :source ""}))
+
+(def compiler-opts
+  {:eval cljs/js-eval
+   :load fake-load-fn})
+
+(def out (atom nil))
+
+(defn ev [form]
+  (binding [cljs.js/*eval-fn* cljs.js/js-eval
+            *ns* (create-ns (gensym))
+            cljs.env/*compiler* (cljs.js/empty-state)]
+    (eval form)))
+
 
 (re-frame/reg-event-db
  ::edit
@@ -31,7 +52,7 @@
    (try
      (let [text (get-in db [::codeblocks id])
            [v h body] (interpret text)]
-       (println id v h))
+       (println (ev (cljs.reader/read-string text) )))
      (catch js/Error e
        (do
          (println e)
@@ -52,7 +73,7 @@
                                      (js/CodeMirror (reagent/dom-node this)
                                                     (clj->js
                                                      {:mode        :clojure
-                                                      :lineNumbers true
+                                                      :lineNumbers false
                                                       :value       content})))
                              (.on @editor "change"
                                   (fn [ed change]
