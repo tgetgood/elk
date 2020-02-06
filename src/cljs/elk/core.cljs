@@ -15,9 +15,8 @@
 
 (defn ^:after-load mount-root []
   (re-frame/clear-subscription-cache!)
-  (re-frame/dispatch [:send [:elk/demo-doc]])
 
-  (reagent/render [window/main [code/editor-page]]
+  (reagent/render [code/editor-page]
                   (.getElementById js/document "app")))
 
 ;; TODO: Remove this from the main project. I want to be able to compile the
