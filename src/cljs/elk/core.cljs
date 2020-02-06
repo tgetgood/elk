@@ -1,9 +1,9 @@
 (ns ^:figwheel-hooks elk.core
   (:require [cljs.js :as cljs]
             [elk.components.code :as code]
-            [elk.components.window :as window]
             [elk.config :as config]
             [elk.events :as events]
+            [elk.input :as input]
             [re-frame.core :as re-frame]
             [reagent.core :as reagent]
             [taoensso.timbre :as log]))
@@ -31,6 +31,7 @@
   (set! cljs.env/*compiler* (cljs.js/empty-state)))
 
 (defn ^:export init []
+  (input/nerf-browser!)
   (eval-setup!)
   (re-frame/dispatch-sync [::events/initialise-db])
   (dev-setup)
