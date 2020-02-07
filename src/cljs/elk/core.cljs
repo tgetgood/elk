@@ -15,6 +15,7 @@
 
 (defn ^:after-load mount-root []
   (re-frame/clear-subscription-cache!)
+  (input/nerf-browser!)
 
   (reagent/render [code/editor-page]
                   (.getElementById js/document "app")))
@@ -31,7 +32,6 @@
   (set! cljs.env/*compiler* (cljs.js/empty-state)))
 
 (defn ^:export init []
-  (input/nerf-browser!)
   (eval-setup!)
   (re-frame/dispatch-sync [::events/initialise-db])
   (dev-setup)

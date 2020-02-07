@@ -7,28 +7,6 @@
            [reagent.core :as reagent]
            [re-frame.core :as re-frame]))
 
-(re-frame/reg-event-db
- ::edit
- (fn [db [_ id text]]
-   (assoc-in db [::codeblocks id :text] text)))
-
-(defn resolve-binding [x] x)
-
-(defn interpret
-  "Docstring"
-  [text]
-  ;; It's either a def, a defn, or some other form. If def of defn we have a
-  ;; desired name, Otherwise the name needs to be added separately. Is there any
-  ;; reason to go by def / defn? I really like Maria's method of seemless
-  ;; forms. If we could let people type as they will and automatically infer
-  ;; names / extract bodies as you go, that would be ideal.
-  (let [form (cljs.reader/read-string text)]
-    ;; TODO: parse this via spec. I think that's a winning use case.
-    (if (and (list? form) (= (first form) 'def))
-      (let [v    (second form)
-            body (first (drop 2 form))]
-        [(resolve-binding v) (h/b64-hash body) body]))))
-
 (re-frame/reg-event-fx
  ::new-block
  (fn [cofx [_ pre]]

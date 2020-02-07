@@ -1,28 +1,6 @@
 (ns elk.input
-  (:require [re-frame.core :as re-frame]))
-
-;;;;; Events
-
-(defn t []
-  (js/Date.now))
-
-(re-frame/reg-event-fx
- ::keydown
- (fn [{:keys [db]} [_ ev]]
-   ;; TODO: scan for held keys
-   {:db (update db ::keys assoc (:keycode ev) (assoc ev :start-time (t)))}))
-
-(re-frame/reg-event-fx
- ::keyup
- (fn [{:keys [db]} [_ ev]]
-   (let [s (-> db ::keys (:keycode ev) :start-time)
-         ev (assoc ev :start-time s :end-time (t))]
-     (merge
-      {:db (update db ::keys dissoc (:keycode ev))}
-      (when (not (contains? #{"Alt" "Shift" "Control"} (:key ev)))
-        {:dispatch [:elk.dispatch/dispatch ::keypress ev]})))))
-
-;;;;; Handler Overrides
+  (:require [elk.dispatch :as d]
+            [re-frame.core :as re-frame]))
 
 (defn strip-key-event
   "Only needed because react insists on recycling event objects."
@@ -31,7 +9,8 @@
    :keycode (.-keyCode ev)
    :shift?  (.-shiftKey ev)
    :alt?    (.-altKey ev)
-   :ctrl?   (.-ctrlKey ev)})
+   :ctrl?   (.-ctrlKey ev)
+   :inst    (js/Date.)})
 
 (defn prev-and [f]
   (fn [ev]
@@ -46,13 +25,13 @@
         (prev-and
          (fn [ev]
            (let [key-data (strip-key-event ev)]
-             (re-frame/dispatch [::keydown key-data])))))
+             (re-frame/dispatch [::d/dispatch ::keydown key-data])))))
 
   (set! js/window.onkeyup
         (prev-and
          (fn [ev]
            (let [key-data (strip-key-event ev)]
-             (re-frame/dispatch [::keyup key-data])))))
+             (re-frame/dispatch [::d/dispatch ::keyup key-data])))))
 
   (set! js/window.onscroll
         (prev-and
