@@ -6,6 +6,7 @@
   "Only needed because react insists on recycling event objects."
   [ev]
   {:key     (.-key ev)
+   :code    (.-code ev)
    :keycode (.-keyCode ev)
    :shift?  (.-shiftKey ev)
    :alt?    (.-altKey ev)
@@ -36,6 +37,6 @@
   (set! js/window.onscroll
         (prev-and
          (fn [ev]
-           (.log js/console "scroll!!!"))))
+           (.log js/console "scroll!!!")))))
+
   ;;TODO: I'll need to override mouse and touch events eventually...
-  )
