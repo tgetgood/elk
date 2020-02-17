@@ -9,18 +9,9 @@
 
 (re-frame/reg-event-fx
  ::new-block
- (fn [cofx [_ pre]]
-   (let [s  (->> (:db cofx)
-                 ::codeblocks
-                 vals
-                 (sort-by :index)
-                 (drop-while #(not= (:index %) (:index pre)))
-                 (take 2)
-                 (map :index))
-         i  (if (= 1 (count s))
-              (inc (first s))
-              (/ (reduce + s) 2))
-         id (gensym)]
+ (fn [cofx [_ i]]
+   (println i)
+   (let [id (gensym)]
      {:db (update (:db cofx) ::codeblocks assoc id {:id id :index i :text ""})
       ;; HACK: What a kludge
       :dispatch-later [{:ms 100 :dispatch [::refocus id]}]})))

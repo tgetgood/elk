@@ -1,6 +1,7 @@
 (ns ^:figwheel-hooks elk.core
   (:require [cljs.js :as cljs]
             [elk.components.code :as code]
+            [elk.dispatch :as dispatch]
             [elk.config :as config]
             [elk.events :as events]
             [elk.input :as input]
@@ -15,6 +16,7 @@
 
 (defn ^:after-load mount-root []
   (re-frame/clear-subscription-cache!)
+  (re-frame/dispatch-sync [::dispatch/start-initial-nexus])
   (input/nerf-browser!)
 
   (reagent/render [code/editor-page]
