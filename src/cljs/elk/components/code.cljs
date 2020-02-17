@@ -10,7 +10,6 @@
 (re-frame/reg-event-fx
  ::new-block
  (fn [cofx [_ i]]
-   (println i)
    (let [id (gensym)]
      {:db (update (:db cofx) ::codeblocks assoc id {:id id :index i :text ""})
       ;; HACK: What a kludge
