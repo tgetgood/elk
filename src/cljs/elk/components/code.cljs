@@ -13,6 +13,11 @@
       ;; HACK: What a kludge
       :dispatch-later [{:ms 100 :dispatch [::refocus id]}]})))
 
+(re-frame/reg-event-db
+ ::codeblocks
+ (fn [db [_ doc]]
+   (assoc db ::codeblocks (:codeblocks doc))))
+
 (re-frame/reg-event-fx
  ::refocus
  (fn [_ id]

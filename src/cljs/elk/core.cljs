@@ -17,6 +17,7 @@
 (defn ^:after-load mount-root []
   (re-frame/clear-subscription-cache!)
   (re-frame/dispatch-sync [::dispatch/start-initial-nexus])
+  (re-frame/dispatch [::dispatch/dispatch ::initial-doc {}])
   (input/nerf-browser!)
 
   (reagent/render [code/editor-page]

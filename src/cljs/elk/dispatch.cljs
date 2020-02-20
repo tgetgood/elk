@@ -17,6 +17,7 @@
 (re-frame/reg-event-fx
  ::dispatch
  (fn [cofx [_ ev & args]]
+   (println ev args)
    (let [redirects (get-in cofx [:db ::handler-redirects ev])
          events (mapv (fn [ev] (into [ev] args)) redirects)]
      {:dispatch-n events})))
@@ -32,6 +33,7 @@
       ;; the outside world prohibits it being a result (data). We must leave the
       ;; medium of computation to build a computer.
       (let [transducers (into {} (map (fn [[k v]] [k (eval (:code v))])) names)]
+        ;; Hoboy...
         (run!
          (fn [[xform wire-map]]
            (let [uniq   (keyword (gensym))
@@ -80,11 +82,39 @@
                         (when (= 16 (:keycode ev))
                           {:state (dissoc state :shift?)}))}})
 
+(def doc-aggregator
+  "The thing which emits a document to be rendered (sent to react)"
+  {:interpreter :cljs
+
+   :code '{:init        (fn [state initial]
+                          {:state initial
+                           :emit  initial})
+           :shift-enter (fn [state initial]
+                          (let [id   (gensym)
+                                next (update state :codeblocks assoc
+                                             id {:id    id
+                                                 :index 0
+                                                 :text  ""})]
+                            {:state next
+                             :emit  next}))}})
+
+(def html-renderer
+  {:interpreter :cljs
+
+   :code '{:render (fn [_ doc]
+                     {:emit doc})}})
+
+;;TODO: The running network isn't being destroyed on reload.
 (def network-topology
-  {:outputs {:shift-enter :elk.components.code/new-block}
-   :names   {:shift-enter shift-enter}
-   :network {:shift-enter {:elk.input/keydown :down
-                           :elk.input/keyup   :up}}})
+  {:outputs {:re-frame-render :elk.components.code/codeblocks}
+   :names   {:shift-enter     shift-enter
+             :doc-aggregator  doc-aggregator
+             :re-frame-render html-renderer}
+   :network {:shift-enter     {:elk.input/keydown :down
+                               :elk.input/keyup   :up}
+             :doc-aggregator  {:shift-enter          :shift-enter
+                               :elk.core/initial-doc :init}
+             :re-frame-render {:doc-aggregator :render}}})
 
 (re-frame/reg-event-fx
  ::start-initial-nexus
