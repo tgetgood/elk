@@ -2,6 +2,7 @@
 /target
 /*-init.clj
 /resources/public/js
+.rebel_readline_history
 out
 .cpcache
 .nrepl-port

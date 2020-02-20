@@ -1,7 +1,5 @@
 (ns elk.components.code
- (:require [cljsjs.codemirror]
-           [cljsjs.codemirror.mode.clojure]
-           [cljs.js :as cljs]
+ (:require [cljs.js :as cljs]
            [cljs.reader :as r]
            [hasch.core :as h]
            [reagent.core :as reagent]
